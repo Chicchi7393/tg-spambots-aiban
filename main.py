@@ -10,7 +10,7 @@ from lib.tg import extract_status_change
 
 DEV = False
 FIRST_MSGS = 15
-dotenv.load_dotenv(".env.dev" if DEV else ".env.prod")
+dotenv.load_dotenv(".env.dev" if DEV else ".env.prod", override=True)
 
 to_check = {}
 
