@@ -33,7 +33,6 @@ class GeminiAILogic:
             }
         }
         ai_call = self._call(payload)
-        print(ai_call)
         overview = json.loads(ai_call["candidates"][0]["content"]["parts"][0]["text"])
         
         return overview

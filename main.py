@@ -8,7 +8,7 @@ from lib.gemini_ai import GeminiAILogic
 from lib.handlers import info_change_handler, message_handler
 from lib.tg import extract_status_change
 
-DEV = True
+DEV = False
 FIRST_MSGS = 15
 dotenv.load_dotenv(".env.dev" if DEV else ".env.prod")
 
@@ -38,8 +38,7 @@ async def check_userchange(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         chat = update.chat_member.chat
 
         isBot = ai.is_bot_join(user)
-        if DEV:
-            print(json.dumps(isBot))
+        print(json.dumps(isBot))
 
         await info_change_handler(isBot, user, context, chat)
 
@@ -56,8 +55,7 @@ async def check_message_afterchange(update: Update, context: ContextTypes.DEFAUL
         return
 
     isBot = ai.is_bot_msg(user, message)
-    if DEV:
-        print(json.dumps(isBot))
+    print(json.dumps(isBot))
 
     await message_handler(isBot, user, message, context, chat)
 
