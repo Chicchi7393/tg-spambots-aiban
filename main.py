@@ -32,8 +32,9 @@ async def check_userchange(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         return
     
     _, is_member = extract_status_change(update.chat_member)
-
     if is_member:
+        print("Member join")
+
         user = update.chat_member.new_chat_member.user
         chat = update.chat_member.chat
 
@@ -54,6 +55,7 @@ async def check_message_afterchange(update: Update, context: ContextTypes.DEFAUL
     if to_check.get(user.id) is None or to_check[user.id] == -1:
         return
 
+    print("Message check")
     isBot = ai.is_bot_msg(user, message)
     print(json.dumps(isBot))
 
