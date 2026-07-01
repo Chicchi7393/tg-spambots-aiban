@@ -13,6 +13,7 @@ FIRST_MSGS = 15
 dotenv.load_dotenv(".env.dev" if DEV else ".env.prod", override=True)
 
 to_check = {}
+checking = []
 
 for key in ["TG_GROUP_ID", "TG_BOT", "VERTEX_MODEL", "VERTEX_API_KEY", "VERTEX_PROJ_ID"]:
     try:
@@ -31,6 +32,11 @@ async def check_userchange(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     if update.chat_member is None or str(update.chat_member.chat.id) != os.environ["TG_GROUP_ID"]:
         return
     
+    if update.chat_member.chat.id in checking:
+        return
+
+    checking.append(update.chat_member.chat.id)
+
     _, is_member = extract_status_change(update.chat_member)
     if is_member:
 
@@ -43,6 +49,9 @@ async def check_userchange(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         await info_change_handler(isBot, user, context, chat)
 
         to_check[user.id] = 0
+    
+    checking.remove(update.chat_member.chat.id)
+
     
 async def check_message_afterchange(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user = update.effective_user

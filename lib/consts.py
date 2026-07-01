@@ -37,18 +37,27 @@ GENERATION_CONFIG = {
             }
 
 def alert_staff_ban_message(user: User, message: Message | None, verdict: dict):
-    return f"⚠️ <b>BANNATO BOT</b>\nUtente: {user.full_name} [{user.id}]\nVerdetto:" \
-        f"\n\t- Probabilità: {verdict["probability"]}\n\t- Descrizione: <i>{verdict["desc"]}</i>" \
-        f"\n\nCausato da: {'Primo messaggio' if message is not None else 'Informazioni utente'}" \
-        f"\nMessaggio (eliminato): {message.text}" if message is not None else ""
+    final_msg = ""
+    final_msg += f"⚠️ <b>BANNATO BOT</b>\nUtente: {user.full_name} [{user.id}]\nVerdetto:"
+    final_msg += f"\n\t- Probabilità: {verdict["probability"]}\n\t- Descrizione: <i>{verdict["desc"]}</i>"
+    final_msg += f"\n\nCausato da: "
+    if message is not None:
+        final_msg += 'Primo messaggio'
+        final_msg += f"\nMessaggio (eliminato): {message.text}"
+    else:
+        final_msg += 'Informazioni utente'
 
 def alert_group_ban_message(user: User, message: Message | None, verdict: dict):
     return f"⚠️ <b>BANNATO BOT</b>: {user.full_name} \n- Descrizione: <i>{verdict["desc"]}</i>"
 
 
 def alert_staff_suspicious_message(user: User, message: Message | None, verdict: dict):
-    return f"⁉️ <b>PROBABILE BOT</b>\nUtente: {user.full_name} [{user.id}]\nVerdetto:" \
-        f"\n\t- Probabilità: {verdict["probability"]}\n\t- Descrizione: <i>{verdict["desc"]}</i>" \
-        f"\n\nCausato da: {'Primo messaggio' if message is not None else 'Informazioni utente'}" \
-        f"\nMessaggio (eliminato): {message.text}" if message is not None else "" \
-        "\n\n<b>DECIDERE SE BANNARE O NO</b>"
+    final_msg = ""
+    final_msg += f"⁉️ <b>PROBABILE BOT</b>\nUtente: {user.full_name} [{user.id}]\nVerdetto:"
+    final_msg += f"\n\t- Probabilità: {verdict["probability"]}\n\t- Descrizione: <i>{verdict["desc"]}</i>"
+    final_msg += f"\n\nCausato da: {'Primo messaggio' if message is not None else 'Informazioni utente'}"
+    if message is not None:
+        final_msg += f"\nMessaggio (eliminato): {message.text}"
+    final_msg += "\n\n<b>DECIDERE SE BANNARE O NO</b>"
+    
+    return final_msg
