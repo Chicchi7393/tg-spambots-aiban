@@ -28,7 +28,7 @@ ai = GeminiAILogic(
 )
 
 async def check_userchange(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    if update.chat_member is None:
+    if update.chat_member is None or update.chat_member.chat.id != os.environ["TG_GROUP_ID"]:
         return
     
     _, is_member = extract_status_change(update.chat_member)
@@ -49,7 +49,7 @@ async def check_message_afterchange(update: Update, context: ContextTypes.DEFAUL
     user = update.effective_user
     chat = update.effective_chat
     message = update.message
-    if user is None or message is None or chat is None:
+    if user is None or message is None or chat is None or chat.id != os.environ["TG_GROUP_ID"]:
         return
     
     if to_check.get(user.id) is None or to_check[user.id] == -1:
