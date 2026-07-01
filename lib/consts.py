@@ -46,6 +46,7 @@ def alert_staff_ban_message(user: User, message: Message | None, verdict: dict):
         final_msg += f"\nMessaggio (eliminato): {message.text}"
     else:
         final_msg += 'Informazioni utente'
+    return final_msg
 
 def alert_group_ban_message(user: User, message: Message | None, verdict: dict):
     return f"⚠️ <b>BANNATO BOT</b>: {user.full_name} \n- Descrizione: <i>{verdict["desc"]}</i>"

@@ -32,13 +32,16 @@ async def check_userchange(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     if update.chat_member is None or str(update.chat_member.chat.id) != os.environ["TG_GROUP_ID"]:
         return
     
-    if update.chat_member.chat.id in checking:
+    if update.chat_member.new_chat_member.user.id in checking:
         return
 
-    checking.append(update.chat_member.chat.id)
+    checking.append(update.chat_member.new_chat_member.user.id)
 
     _, is_member = extract_status_change(update.chat_member)
-    if is_member:
+    # with the from_user == new_chat_member ids check, i just prevent the fact that
+    # any other bot could edit permissions on the user
+    # and retrigger the check
+    if is_member and update.chat_member.from_user.id == update.chat_member.new_chat_member.user.id:
 
         user = update.chat_member.new_chat_member.user
         chat = update.chat_member.chat
@@ -50,7 +53,7 @@ async def check_userchange(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
         to_check[user.id] = 0
     
-    checking.remove(update.chat_member.chat.id)
+    checking.remove(update.chat_member.new_chat_member.user.id)
 
     
 async def check_message_afterchange(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
