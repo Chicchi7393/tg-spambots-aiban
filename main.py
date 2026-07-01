@@ -9,9 +9,10 @@ from lib.handlers import info_change_handler, message_handler
 from lib.tg import extract_status_change
 
 DEV = True
+FIRST_MSGS = 15
 dotenv.load_dotenv(".env.dev" if DEV else ".env.prod")
 
-to_check = []
+to_check = {}
 
 for key in ["TG_GROUP_ID", "TG_BOT", "VERTEX_MODEL", "VERTEX_API_KEY", "VERTEX_PROJ_ID"]:
     try:
@@ -42,22 +43,28 @@ async def check_userchange(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
         await info_change_handler(isBot, user, context, chat)
 
-        to_check.append(user.id)
+        to_check[user.id] = 0
     
 async def check_message_afterchange(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user = update.effective_user
     chat = update.effective_chat
     message = update.message
-    if user is None or user.id not in to_check or message is None or chat is None:
+    if user is None or message is None or chat is None:
         return
     
+    if to_check.get(user.id) is None or to_check[user.id] == -1:
+        return
+
     isBot = ai.is_bot_msg(user, message)
     if DEV:
         print(json.dumps(isBot))
-        
+
     await message_handler(isBot, user, message, context, chat)
 
-    to_check.remove(user.id)
+    to_check[user.id] += 1
+
+    if to_check[user.id] == FIRST_MSGS:
+        to_check[user.id] = -1
     
 
 

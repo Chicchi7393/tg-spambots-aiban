@@ -5,11 +5,15 @@ BOT_DESC_PROMPT = "Sei un bot telegram che ha come compito decretare se, un uten
 " Sei in un gruppo inerente all'informatica frequentato da umani, il tuo obiettivo " \
 "è restituirmi un numero da 0.00 a 1.00 (\"probability\"), dove 0.00 è assolutamente umano, e 1.00 è assolutamente bot." \
 "Inoltre, se hai sospetti sul fatto che sia bot, fornisci una descrizione breve sul perchè (max 40 parole, \"desc\", se non necessaria, stringa vuota)." \
+"Se la probabilità è sopra 0.85, verrà bannato ed eliminato il messaggio, se invece tra 0.65 e 0.85, verranno avvisati gli admin" \
 "Esempi bot:  - self-promo a servizi, ad esempio, di scommesse, " \
 "che siano bot con nomi servizi genuini, " \
 "atti a far credere che sia il servizio ufficiale, o complete truffe " \
 "(ad esempio, come bot prominenti abbiamo Stake Casino - impersonazione di casino davvero esistente, o BC Game, che è pure esso molto presente - bot truffa, casino scam su telegram)" \
 " - Bot mirati a promozione di trading o sorte  - Bot mirati alla diffusione di canali porno.  - Bot mirati alla vendita di sostanze/servizi illegali."
+
+# gatekept for secret info, like the history of bans?
+BOT_EXTRA_PROMPT = open("extra_prompt.txt").read()
 
 BOT_JOIN_PROMPT = "Un nuovo membro del gruppo è entrato: come assistente, devi fornirmi, " \
 "come ti ho detto prima, una probabilita e, se necessario, una descrizione. Ti fornirò nome, username e id telegram (più basso è il numero, più è vecchio l'account -> meno probabile che sia un bot)."
@@ -34,17 +38,17 @@ GENERATION_CONFIG = {
 
 def alert_staff_ban_message(user: User, message: Message | None, verdict: dict):
     return f"⚠️ <b>BANNATO BOT</b>\nUtente: {user.full_name} [{user.id}]\nVerdetto:" \
-        f"\n\t- Probabilità: {verdict["probability"]}\n\t- Descrizione: {verdict["desc"]}" \
+        f"\n\t- Probabilità: {verdict["probability"]}\n\t- Descrizione: <i>{verdict["desc"]}</i>" \
         f"\n\nCausato da: {'Primo messaggio' if message is not None else 'Informazioni utente'}" \
-        f"\nMessaggio: {message.text}" if message is not None else ""
+        f"\nMessaggio (eliminato): {message.text}" if message is not None else ""
 
 def alert_group_ban_message(user: User, message: Message | None, verdict: dict):
-    return f"⚠️ <b>BANNATO BOT</b>: {user.full_name} \n- Descrizione: {verdict["desc"]}"
+    return f"⚠️ <b>BANNATO BOT</b>: {user.full_name} \n- Descrizione: <i>{verdict["desc"]}</i>"
 
 
 def alert_staff_suspicious_message(user: User, message: Message | None, verdict: dict):
     return f"⁉️ <b>PROBABILE BOT</b>\nUtente: {user.full_name} [{user.id}]\nVerdetto:" \
-        f"\n\t- Probabilità: {verdict["probability"]}\n\t- Descrizione: {verdict["desc"]}" \
+        f"\n\t- Probabilità: {verdict["probability"]}\n\t- Descrizione: <i>{verdict["desc"]}</i>" \
         f"\n\nCausato da: {'Primo messaggio' if message is not None else 'Informazioni utente'}" \
         f"\nMessaggio (eliminato): {message.text}" if message is not None else "" \
         "\n\n<b>DECIDERE SE BANNARE O NO</b>"

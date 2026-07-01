@@ -2,3 +2,4 @@
 .env.dev
 .env.prod
 __pycache__
+extra_prompt.txt
