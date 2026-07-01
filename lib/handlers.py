@@ -24,7 +24,7 @@ async def message_handler(verdict: dict, user: User, message: Message, context: 
 
 
 async def ban_final_verdict(verdict: dict, message: Message | None, user: User, context: ContextTypes.DEFAULT_TYPE, chat: Chat):
-    await chat.ban_member(user.id, revoke_messages=True)
+    await chat.ban_member(user.id)
 
     if message is not None:
         await chat.delete_message(message.id)
