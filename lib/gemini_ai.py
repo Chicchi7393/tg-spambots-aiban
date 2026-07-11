@@ -48,7 +48,7 @@ class GeminiAILogic:
             "generationConfig": GENERATION_CONFIG,
             "systemInstruction": {
                 "role": "system",
-                "parts": [{"text": BOT_DESC_PROMPT}, {"text": BOT_MESSAGE_PROMPT}, {"text": BOT_EXTRA_PROMPT}}, {"text": BOT_CORRECTIONS_PROMPT_FILE.read()}]
+                "parts": [{"text": BOT_DESC_PROMPT}, {"text": BOT_MESSAGE_PROMPT}, {"text": BOT_EXTRA_PROMPT}, {"text": BOT_CORRECTIONS_PROMPT_FILE.read()}]
             }
         }
         ai_call = self._call(payload)
