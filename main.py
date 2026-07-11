@@ -4,6 +4,7 @@ import dotenv
 import os
 import json
 
+from lib.commands import badboy, goodboy
 from lib.gemini_ai import GeminiAILogic
 from lib.handlers import info_change_handler, message_handler
 from lib.tg import extract_status_change
@@ -82,5 +83,8 @@ app = ApplicationBuilder().token(os.environ["TG_BOT"]).build()
 
 app.add_handler(ChatMemberHandler(check_userchange, ChatMemberHandler.CHAT_MEMBER))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, check_message_afterchange))
+app.add_handler(CommandHandler("goodboy", goodboy))
+app.add_handler(CommandHandler("badboy", badboy))
+
 print("Bot started!")
 app.run_polling(allowed_updates=Update.ALL_TYPES)

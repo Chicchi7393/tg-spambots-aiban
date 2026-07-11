@@ -15,6 +15,9 @@ BOT_DESC_PROMPT = "Sei un bot telegram che ha come compito decretare se, un uten
 # gatekept for secret info, like the history of bans?
 BOT_EXTRA_PROMPT = open("extra_prompt.txt").read()
 
+# corrections
+BOT_CORRECTIONS_PROMPT_FILE = open("corrections_prompt.txt", "x+")
+
 BOT_JOIN_PROMPT = "Un nuovo membro del gruppo è entrato: come assistente, devi fornirmi, " \
 "come ti ho detto prima, una probabilita e, se necessario, una descrizione. Ti fornirò nome, username e id telegram (più basso è il numero, più è vecchio l'account -> meno probabile che sia un bot)."
 
@@ -62,3 +65,14 @@ def alert_staff_suspicious_message(user: User, message: Message | None, verdict:
     final_msg += "\n\n<b>DECIDERE SE BANNARE O NO</b>"
     
     return final_msg
+
+def correction_subprompt(replyMessage: Message, opinion: str, pos: bool) -> str:
+    final_subprompt = ""
+    final_subprompt += "CORREZIONE DI ESITO BOT:\n"
+    final_subprompt += "MESSAGGIO DI ESITO BOT QUA SOTTO (verrà interrotto da questa sequenza \"{STOP}\"):\n\n"
+    assert replyMessage.text is not None
+    final_subprompt += replyMessage.text
+    final_subprompt += "\n{STOP}\n"
+    final_subprompt += f"Correzione di {'de' if not pos else ''}merito: {opinion}\n\n"
+    final_subprompt += f"-------- FINE CORREZIONE --------"
+    return final_subprompt

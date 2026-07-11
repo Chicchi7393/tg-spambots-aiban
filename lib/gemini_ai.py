@@ -1,7 +1,7 @@
 import requests
 from telegram import Message, User
 import json
-from lib.consts import BOT_DESC_PROMPT, BOT_EXTRA_PROMPT, BOT_JOIN_PROMPT, BOT_MESSAGE_PROMPT, GENERATION_CONFIG
+from lib.consts import BOT_CORRECTIONS_PROMPT_FILE, BOT_DESC_PROMPT, BOT_EXTRA_PROMPT, BOT_JOIN_PROMPT, BOT_MESSAGE_PROMPT, GENERATION_CONFIG
 
 
 class GeminiAILogic:
@@ -29,7 +29,7 @@ class GeminiAILogic:
             "generationConfig": GENERATION_CONFIG,
             "systemInstruction": {
                 "role": "system",
-                "parts": [{"text": BOT_DESC_PROMPT}, {"text": BOT_JOIN_PROMPT}, {"text": BOT_EXTRA_PROMPT}]
+                "parts": [{"text": BOT_DESC_PROMPT}, {"text": BOT_JOIN_PROMPT}, {"text": BOT_EXTRA_PROMPT}, {"text": BOT_CORRECTIONS_PROMPT_FILE.read()}]
             }
         }
         ai_call = self._call(payload)
@@ -48,7 +48,7 @@ class GeminiAILogic:
             "generationConfig": GENERATION_CONFIG,
             "systemInstruction": {
                 "role": "system",
-                "parts": [{"text": BOT_DESC_PROMPT}, {"text": BOT_MESSAGE_PROMPT}, {"text": BOT_EXTRA_PROMPT}]
+                "parts": [{"text": BOT_DESC_PROMPT}, {"text": BOT_MESSAGE_PROMPT}, {"text": BOT_EXTRA_PROMPT}}, {"text": BOT_CORRECTIONS_PROMPT_FILE.read()}]
             }
         }
         ai_call = self._call(payload)
