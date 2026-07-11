@@ -12,7 +12,7 @@ async def _replyChecks(update: Update, context: ContextTypes.DEFAULT_TYPE) -> bo
     try:
         assert message is not None and message.text is not None
         assert update.effective_chat is not None
-        assert update.effective_chat.id == os.environ["TG_GROUP_ID"]
+        assert str(update.effective_chat.id) == os.environ["TG_ALERT_ID"]
 
         replyMessage = message.reply_to_message
 
@@ -23,7 +23,7 @@ async def _replyChecks(update: Update, context: ContextTypes.DEFAULT_TYPE) -> bo
         assert replyMessage.from_user is not None and replyMessage.from_user.id == context.bot.id
 
         errorMsg = "Il mio messaggio deve essere di evento."
-        assert replyMessage.text is not None and "BOT" not in replyMessage.text
+        assert replyMessage.text is not None and "bot" in replyMessage.text.lower()
 
         errorMsg = "Il messaggio deve contenere, dopo lo spazio, una tua opinione sul perchè sia giusto/sbagliato"
         assert len(message.text.split(" ")) > 1
@@ -47,6 +47,7 @@ async def goodboy(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     opinion = " ".join(message.text.split(" ")[1:])
 
     BOT_CORRECTIONS_PROMPT_FILE.write(correction_subprompt(reply_to_message, opinion, True))
+    BOT_CORRECTIONS_PROMPT_FILE.flush()
     await message.reply_text("Aggiunta nota di merito")
     
 
@@ -64,4 +65,6 @@ async def badboy(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     opinion = " ".join(message.text.split(" ")[1:])
 
     BOT_CORRECTIONS_PROMPT_FILE.write(correction_subprompt(reply_to_message, opinion, False))
+    BOT_CORRECTIONS_PROMPT_FILE.flush()
+
     await message.reply_text("Aggiunta nota di demerito")

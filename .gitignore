@@ -3,3 +3,4 @@
 .env.prod
 __pycache__
 extra_prompt.txt
+corrections_prompt.txt

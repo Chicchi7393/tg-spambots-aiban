@@ -75,4 +75,5 @@ def correction_subprompt(replyMessage: Message, opinion: str, pos: bool) -> str:
     final_subprompt += "\n{STOP}\n"
     final_subprompt += f"Correzione di {'de' if not pos else ''}merito: {opinion}\n\n"
     final_subprompt += f"-------- FINE CORREZIONE --------"
+    
     return final_subprompt
