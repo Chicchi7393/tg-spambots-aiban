@@ -16,7 +16,7 @@ BOT_DESC_PROMPT = "Sei un bot telegram che ha come compito decretare se, un uten
 BOT_EXTRA_PROMPT = open("extra_prompt.txt").read()
 
 # corrections
-BOT_CORRECTIONS_PROMPT_FILE = open("corrections_prompt.txt", "x+")
+BOT_CORRECTIONS_PROMPT_FILE = open("corrections_prompt.txt", "w+")
 
 BOT_JOIN_PROMPT = "Un nuovo membro del gruppo è entrato: come assistente, devi fornirmi, " \
 "come ti ho detto prima, una probabilita e, se necessario, una descrizione. Ti fornirò nome, username e id telegram (più basso è il numero, più è vecchio l'account -> meno probabile che sia un bot)."
