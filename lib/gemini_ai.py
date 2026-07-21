@@ -1,7 +1,7 @@
 import requests
 from telegram import Message, User
 import json
-from lib.consts import BOT_CORRECTIONS_PROMPT_FILE, BOT_DESC_PROMPT, BOT_EXTRA_PROMPT, BOT_JOIN_PROMPT, BOT_MESSAGE_PROMPT, GENERATION_CONFIG
+from lib.consts import BOT_DESC_PROMPT, BOT_EXTRA_PROMPT, BOT_JOIN_PROMPT, BOT_MESSAGE_PROMPT, GENERATION_CONFIG
 
 
 class GeminiAILogic:
@@ -20,16 +20,25 @@ class GeminiAILogic:
         return req.json()
 
     def is_bot_join(self, user: User) -> dict:
+        corrections = ""
+        with open("corrections_prompt.txt") as c:
+            corrections = c.read()
+
+        userPayload = json.dumps(
+            user,
+            default=lambda o: o.__dict__, 
+            sort_keys=True)
+        
         payload = {
             "contents": [
                 {"role": "assistant", "parts": [
-                    {"text": f"Nome dell'utente: {user.full_name}, username: {user.username}, id: {user.id}"}
+                    {"text": f"User: {userPayload}"}
                 ]}
             ],
             "generationConfig": GENERATION_CONFIG,
             "systemInstruction": {
                 "role": "system",
-                "parts": [{"text": BOT_DESC_PROMPT}, {"text": BOT_JOIN_PROMPT}, {"text": BOT_EXTRA_PROMPT}, {"text": BOT_CORRECTIONS_PROMPT_FILE.read()}]
+                "parts": [{"text": BOT_DESC_PROMPT}, {"text": BOT_JOIN_PROMPT}, {"text": BOT_EXTRA_PROMPT}, {"text": corrections}]
             }
         }
         ai_call = self._call(payload)
@@ -39,16 +48,30 @@ class GeminiAILogic:
     
 
     def is_bot_msg(self, user: User, message: Message) -> dict:
+        corrections = ""
+        with open("corrections_prompt.txt") as c:
+            corrections = c.read()
+
+        messagePayload = json.dumps(
+            message,
+            default=lambda o: o.__dict__, 
+            sort_keys=True)        
+        
+        userPayload = json.dumps(
+            user,
+            default=lambda o: o.__dict__, 
+            sort_keys=True)
+        
         payload = {
             "contents": [
                 {"role": "assistant", "parts": [
-                    {"text": f"Nome dell'utente: {user.full_name}, username: {user.username}, id: {user.id}, messaggio: {message.text}"}
+                    {"text": f"User: {userPayload}, message: {messagePayload}"}
                 ]}
             ],
             "generationConfig": GENERATION_CONFIG,
             "systemInstruction": {
                 "role": "system",
-                "parts": [{"text": BOT_DESC_PROMPT}, {"text": BOT_MESSAGE_PROMPT}, {"text": BOT_EXTRA_PROMPT}, {"text": BOT_CORRECTIONS_PROMPT_FILE.read()}]
+                "parts": [{"text": BOT_DESC_PROMPT}, {"text": BOT_MESSAGE_PROMPT}, {"text": BOT_EXTRA_PROMPT}, {"text": corrections}]
             }
         }
         ai_call = self._call(payload)

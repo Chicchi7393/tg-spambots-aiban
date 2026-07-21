@@ -10,13 +10,14 @@ BOT_DESC_PROMPT = "Sei un bot telegram che ha come compito decretare se, un uten
 "che siano bot con nomi servizi genuini, " \
 "atti a far credere che sia il servizio ufficiale, o complete truffe " \
 "(ad esempio, come bot prominenti abbiamo Stake Casino - impersonazione di casino davvero esistente, o BC Game, che è pure esso molto presente - bot truffa, casino scam su telegram)" \
-" - Bot mirati a promozione di trading o sorte  - Bot mirati alla diffusione di canali porno.  - Bot mirati alla vendita di sostanze/servizi illegali."
+" - Bot mirati a promozione di trading o sorte  - Bot mirati alla diffusione di canali porno.  - Bot mirati alla vendita di sostanze/servizi illegali." \
+"Non bannare se non sei ASSOLUTAMENTE certo che sia un bot."
 
 # gatekept for secret info, like the history of bans?
 BOT_EXTRA_PROMPT = open("extra_prompt.txt").read()
 
 # corrections
-BOT_CORRECTIONS_PROMPT_FILE = open("corrections_prompt.txt", "w+")
+BOT_CORRECTIONS_PROMPT_FILE = open("corrections_prompt.txt", "w")
 
 BOT_JOIN_PROMPT = "Un nuovo membro del gruppo è entrato: come assistente, devi fornirmi, " \
 "come ti ho detto prima, una probabilita e, se necessario, una descrizione. Ti fornirò nome, username e id telegram (più basso è il numero, più è vecchio l'account -> meno probabile che sia un bot)."
@@ -74,6 +75,6 @@ def correction_subprompt(replyMessage: Message, opinion: str, pos: bool) -> str:
     final_subprompt += replyMessage.text
     final_subprompt += "\n{STOP}\n"
     final_subprompt += f"Correzione di {'de' if not pos else ''}merito: {opinion}\n\n"
-    final_subprompt += f"-------- FINE CORREZIONE --------"
+    final_subprompt += f"-------- FINE CORREZIONE --------\n\n"
     
     return final_subprompt
