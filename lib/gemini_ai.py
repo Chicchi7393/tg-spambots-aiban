@@ -24,10 +24,9 @@ class GeminiAILogic:
         with open("corrections_prompt.txt") as c:
             corrections = c.read()
 
-        userPayload = json.dumps(
-            user,
-            default=lambda o: o.__dict__, 
-            sort_keys=True)
+        userDict = user._get_attrs()
+        userDict["api_kwargs"] = {}
+        userPayload = json.dumps(userDict, skipkeys=True, default=None)
         
         payload = {
             "contents": [
@@ -52,15 +51,19 @@ class GeminiAILogic:
         with open("corrections_prompt.txt") as c:
             corrections = c.read()
 
-        messagePayload = json.dumps(
-            message,
-            default=lambda o: o.__dict__, 
-            sort_keys=True)        
+        messageDict = message._get_attrs()
+        messageDict["api_kwargs"] = {}
+
+        messageDict["from_user"] = message.from_user.id
+        messageDict["chat"] = message.chat.id
+        messageDict["date"] = message.date.timestamp()
         
-        userPayload = json.dumps(
-            user,
-            default=lambda o: o.__dict__, 
-            sort_keys=True)
+        messagePayload = json.dumps(messageDict, skipkeys=True, default=None)
+        
+        userDict = user._get_attrs()
+        userDict["api_kwargs"] = {}
+        userPayload = json.dumps(userDict, skipkeys=True, default=None)
+
         
         payload = {
             "contents": [
