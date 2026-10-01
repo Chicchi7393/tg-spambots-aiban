@@ -16,17 +16,17 @@ dotenv.load_dotenv(".env.dev" if DEV else ".env.prod", override=True)
 to_check = {}
 checking = []
 
-for key in ["TG_GROUP_ID", "TG_BOT", "VERTEX_MODEL", "VERTEX_API_KEY", "VERTEX_PROJ_ID"]:
+for key in ["TG_GROUP_ID", "TG_BOT", "AI_BASE_URL", "AI_API_KEY", "AI_MODEL"]:
     try:
         assert os.environ[key] != "" and os.environ[key] != None
     except AssertionError as e:
         e.add_note(f"Missing value in env: {key}")
         raise e
-    
+
 ai = GeminiAILogic(
-    vertex_api_key = os.environ["VERTEX_API_KEY"],
-    vertex_model = os.environ["VERTEX_MODEL"],
-    vertex_proj_id = os.environ["VERTEX_PROJ_ID"]
+    base_url = os.environ["AI_BASE_URL"],
+    api_key = os.environ["AI_API_KEY"],
+    model = os.environ["AI_MODEL"],
 )
 
 async def check_userchange(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

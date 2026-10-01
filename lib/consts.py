@@ -26,19 +26,15 @@ BOT_MESSAGE_PROMPT = "Un nuovo membro del gruppo ha mandato il suo primo messagg
 "come ti ho detto prima, una probabilita e, se necessario, una descrizione. Ti fornirò nome, username, messaggio inviato e id telegram (più basso è il numero, più è vecchio l'account -> meno probabile che sia un bot)."
 
 
-GENERATION_CONFIG = {
-                "temperature": 0.0,
-                "maxOutputTokens": 1000,
-                "responseMimeType": "application/json",
-                "responseSchema": {
-                    "type": "OBJECT",
-                    "properties": {
-                        "probability": {"type": "NUMBER"},
-                        "desc": {"type": "STRING"}
-                    },
-                    "required": ["probability", "desc"]
-                }
-            }
+RESPONSE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "probability": {"type": "number"},
+        "desc": {"type": "string"},
+    },
+    "required": ["probability", "desc"],
+    "additionalProperties": False,
+}
 
 def alert_staff_ban_message(user: User, message: Message | None, verdict: dict):
     final_msg = ""
