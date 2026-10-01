@@ -7,13 +7,13 @@ Especially, there is this group of bots, that join _a lot_ (we've banned hundred
 
 
 ## How does it work?
-Basically, every time an user / bot joins the group, it's name and tag gets sent to an LLM (in our case, firebase vertex ai) that estimates how likely it may be a bot.
+Basically, every time an user / bot joins the group, it's name and tag gets sent to an LLM (any endpoint compatible with the OpenAI Responses API, configured via `AI_BASE_URL`, `AI_API_KEY` and `AI_MODEL`) that estimates how likely it may be a bot.
 
 In a scale from 0.00 and 1.00, if the likeliness of it being a bot is over 0.65, an alert to the alert group (could be a staff group chat) will be sent, if set.
 
 If, instead, the likeliness is over 0.85, the account is automatically banned.
 
-Same thing happens for the first message of every new user.
+Same thing happens for the first 15 messages of every new user.
 
 ## Where did you get the inspiration?
 Mainly from seeing the 110th bot joining and getting banned.
